@@ -200,18 +200,66 @@ class WebServer {
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
           // extract path parameters
           query_pairs = splitQuery(request.replace("multiply?", ""));
-
+          
+          int num1 = 2;
+          int num2 = 3;
+          
+          
+          if (!query_pairs.containsKey("num1")) {
+        	  System.out.println("Testing");
+        	  try {
+        		  num2 = Integer.parseInt(query_pairs.get("num2"));
+        	  }
+        	  catch (Exception e) {
+        		  builder.append("HTTP/1.1 231 Partial Response. Default Values Used\n");
+                  builder.append("Content-Type: text/html; charset=utf-8\n");
+                  builder.append("\n");
+                  builder.append("Invalid Arugment provided.");
+                  return builder.toString().getBytes();
+          }
+          }
+          
+          if (!query_pairs.containsKey("num2")) {
+        	  System.out.println("Testing");
+        	  try {
+        		  num1 = Integer.parseInt(query_pairs.get("num1"));
+        		  builder.append("HTTP/1.1 231 Partial Response. Default Values Used\n");
+                  builder.append("Content-Type: text/html; charset=utf-8\n");
+                  builder.append("\n");
+        	  }
+        	  catch (Exception e) {
+        		  builder.append("HTTP/1.1 400 Invalid Argument\n");
+                  builder.append("Content-Type: text/html; charset=utf-8\n");
+                  builder.append("\n");
+                  builder.append("Invalid Arugment provided.");
+                  return builder.toString().getBytes();
+        	  }
+        	  System.out.println("Default num2 value used");
+          }
+          
+          if (query_pairs.containsKey("num1") && query_pairs.containsKey("num2")) {
+        	  try {
+        		  num1 = Integer.parseInt(query_pairs.get("num1"));
+                  num2 = Integer.parseInt(query_pairs.get("num2"));
+               // Generate response
+                  builder.append("HTTP/1.1 200 OK\n");
+                  builder.append("Content-Type: text/html; charset=utf-8\n");
+                  builder.append("\n");
+        	  }
+        	  catch (Exception e) {
+        		  builder.append("HTTP/1.1 400 Invalid Argument\n");
+                  builder.append("Content-Type: text/html; charset=utf-8\n");
+                  builder.append("\n");
+                  builder.append("Invalid Arugment provided.");
+                  return builder.toString().getBytes();
+        	  }
+          }
+        	  
+          
           // extract required fields from parameters
-          Integer num1 = Integer.parseInt(query_pairs.get("num1"));
-          Integer num2 = Integer.parseInt(query_pairs.get("num2"));
-
+          
           // do math
-          Integer result = num1 * num2;
-
-          // Generate response
-          builder.append("HTTP/1.1 200 OK\n");
-          builder.append("Content-Type: text/html; charset=utf-8\n");
-          builder.append("\n");
+          int result = num1 * num2;
           builder.append("Result is: " + result);
 
           // TODO: Include error handling here with a correct error code and
